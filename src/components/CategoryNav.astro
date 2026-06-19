@@ -1,0 +1,29 @@
+---
+import type { PaintingCategory } from "../data/paintings";
+
+interface Props {
+  current?: PaintingCategory | "alle";
+}
+
+const { current = "alle" } = Astro.props;
+
+const links = [
+  { href: "/malerier", label: "Alle værker", value: "alle" },
+  { href: "/malerier/akvarel", label: "Akvarel", value: "akvarel" },
+  { href: "/malerier/olie", label: "Olie", value: "olie" },
+  { href: "/malerier/akryl", label: "Akryl", value: "akryl" },
+];
+---
+
+<nav class="category-nav" aria-label="Malerikategorier">
+  {
+    links.map((link) => (
+      <a
+        href={link.href}
+        aria-current={current === link.value ? "page" : undefined}
+      >
+        {link.label}
+      </a>
+    ))
+  }
+</nav>

@@ -1,0 +1,39 @@
+---
+import { previewImageFor, type Painting } from "../data/paintings";
+
+interface Props {
+  painting: Painting;
+  eager?: boolean;
+}
+
+const { painting, eager = false } = Astro.props;
+const previewImage = previewImageFor(painting.image);
+---
+
+<article class="painting-card" id={painting.id}>
+  <a
+    class="painting-card__image"
+    href={painting.image}
+    target="_blank"
+    rel="noreferrer"
+    aria-label={`Åbn ${painting.title} i fuld størrelse`}
+  >
+    <img
+      src={previewImage}
+      alt={painting.title}
+      width={painting.width}
+      height={painting.height}
+      loading={eager ? "eager" : "lazy"}
+      fetchpriority={eager ? "high" : "auto"}
+      decoding="async"
+    />
+  </a>
+  <div class="painting-card__meta">
+    <h2>{painting.title}</h2>
+    <p>
+      <span>{painting.technique}</span>
+      {painting.size && <span aria-hidden="true">·</span>}
+      {painting.size && <span>{painting.size}</span>}
+    </p>
+  </div>
+</article>

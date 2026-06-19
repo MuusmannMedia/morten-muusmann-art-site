@@ -1,0 +1,162 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PaintingGrid from "../components/PaintingGrid.astro";
+import {
+  paintings,
+  paintingsByCategory,
+  previewImageFor,
+} from "../data/paintings";
+
+const heroPainting = paintings.find((painting) => painting.id === "i-was-18")!;
+const featuredIds = [
+  "after-man",
+  "eye-out",
+  "the-breeze",
+  "summer-bird",
+  "the-empty-head",
+  "birthday-girl",
+];
+const featuredPaintings = featuredIds.map(
+  (id) => paintings.find((painting) => painting.id === id)!,
+);
+const heroPreview = previewImageFor(heroPainting.image);
+
+const categories = [
+  {
+    name: "Akvarel",
+    href: "/malerier/akvarel",
+    image: "/images/previews/paintings/akvarel/summer-bird.webp",
+    count: paintingsByCategory("akvarel").length,
+  },
+  {
+    name: "Olie",
+    href: "/malerier/olie",
+    image: "/images/previews/paintings/olie/eye-out.webp",
+    count: paintingsByCategory("olie").length,
+  },
+  {
+    name: "Akryl",
+    href: "/malerier/akryl",
+    image: "/images/previews/paintings/akryl/dont-stare.webp",
+    count: paintingsByCategory("akryl").length,
+  },
+];
+---
+
+<BaseLayout
+  title="Morten Muusmann"
+  description="Morten Muusmann er kunstmaler og grafisk designer. Se et udvalg af værker i akvarel, olie og akryl."
+>
+  <section class="hero shell">
+    <div class="hero__content">
+      <p class="eyebrow">Kunstmaler & grafisk designer</p>
+      <h1>Farver, teksturer og stemninger.</h1>
+      <p class="hero__lead">
+        Mine malerier spænder over akryl, akvarel og olie, hvor jeg
+        eksperimenterer med lys, dybde og komposition for at skabe unikke
+        visuelle udtryk.
+      </p>
+      <div class="button-row">
+        <a class="button button--primary" href="/malerier">Se malerier</a>
+        <a class="button button--quiet" href="/biografi">Læs biografi</a>
+      </div>
+      <dl class="hero__stats" aria-label="Antal værker på siden">
+        <div>
+          <dt>{paintings.length}</dt>
+          <dd>værker</dd>
+        </div>
+        <div>
+          <dt>3</dt>
+          <dd>teknikker</dd>
+        </div>
+      </dl>
+    </div>
+
+    <figure class="hero__art">
+      <span class="hero__frame">
+        <img
+          src={heroPreview}
+          alt={heroPainting.title}
+          width={heroPainting.width}
+          height={heroPainting.height}
+          loading="eager"
+          fetchpriority="high"
+        />
+      </span>
+      <figcaption>
+        <strong>{heroPainting.title}</strong>
+        <span>{heroPainting.technique} · {heroPainting.size}</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="section shell">
+    <div class="section-heading section-heading--split">
+      <div>
+        <p class="eyebrow">Malerier</p>
+        <h2>Tre teknikker. Ét personligt blik.</h2>
+      </div>
+      <p>
+        Jeg arbejder både abstrakt og figurativt og lader ofte farverne og
+        penselstrøgene styre processen.
+      </p>
+    </div>
+
+    <div class="category-cards">
+      {
+        categories.map((category) => (
+          <a class="category-card" href={category.href}>
+            <img
+              src={category.image}
+              alt=""
+              width="900"
+              height="700"
+              loading="lazy"
+            />
+            <span class="category-card__overlay">
+              <span>
+                <strong>{category.name}</strong>
+                <small>{category.count} værker</small>
+              </span>
+              <span aria-hidden="true">↗</span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="shell">
+      <div class="section-heading section-heading--split">
+        <div>
+          <p class="eyebrow">Udvalgte værker</p>
+          <h2>Et blik ind i samlingen</h2>
+        </div>
+        <a class="text-link" href="/malerier">Se alle 35 værker <span>→</span></a>
+      </div>
+      <PaintingGrid paintings={featuredPaintings} />
+    </div>
+  </section>
+
+  <section class="artist-note shell">
+    <p class="eyebrow">Om arbejdet</p>
+    <blockquote>
+      “Maleriet er min måde at formidle følelser og stemninger på. Hvert værk
+      er en balance mellem det spontane og det kontrollerede.”
+    </blockquote>
+    <a class="text-link" href="/biografi">Mød Morten <span>→</span></a>
+  </section>
+
+  <section class="contact-band">
+    <div class="shell contact-band__inner">
+      <div>
+        <p class="eyebrow">Kontakt</p>
+        <h2>Vil du vide mere om et værk?</h2>
+      </div>
+      <a class="button button--light" href="mailto:morten.muusmann@gmail.com">
+        Skriv til Morten
+      </a>
+    </div>
+  </section>
+</BaseLayout>

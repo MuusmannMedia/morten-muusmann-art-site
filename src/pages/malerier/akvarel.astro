@@ -1,0 +1,34 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PaintingGrid from "../../components/PaintingGrid.astro";
+import CategoryNav from "../../components/CategoryNav.astro";
+import {
+  categoryInfo,
+  paintingsByCategory,
+} from "../../data/paintings";
+
+const category = categoryInfo.akvarel;
+const categoryPaintings = paintingsByCategory("akvarel");
+---
+
+<BaseLayout
+  title="Akvarel"
+  description="Se Morten Muusmanns akvarelmalerier – et spil mellem lys, pigment og papirets struktur."
+  image="/images/previews/paintings/akvarel/summer-bird.webp"
+>
+  <section class="page-intro shell">
+    <p class="eyebrow">Malerier · {categoryPaintings.length} værker</p>
+    <h1>{category.heading}</h1>
+    <p>{category.description}</p>
+    <CategoryNav current="akvarel" />
+  </section>
+
+  <section class="gallery-section shell">
+    <PaintingGrid paintings={categoryPaintings} eagerCount={3} />
+  </section>
+
+  <figure class="quote shell">
+    <blockquote>“{category.quote}”</blockquote>
+    <figcaption>{category.quoteAuthor}</figcaption>
+  </figure>
+</BaseLayout>

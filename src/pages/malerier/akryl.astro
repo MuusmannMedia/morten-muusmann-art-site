@@ -1,0 +1,34 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PaintingGrid from "../../components/PaintingGrid.astro";
+import CategoryNav from "../../components/CategoryNav.astro";
+import {
+  categoryInfo,
+  paintingsByCategory,
+} from "../../data/paintings";
+
+const category = categoryInfo.akryl;
+const categoryPaintings = paintingsByCategory("akryl");
+---
+
+<BaseLayout
+  title="Akryl"
+  description="Se Morten Muusmanns akrylmalerier med farve, energi og bevægelse."
+  image="/images/previews/paintings/akryl/the-breeze.webp"
+>
+  <section class="page-intro shell">
+    <p class="eyebrow">Malerier · {categoryPaintings.length} værker</p>
+    <h1>{category.heading}</h1>
+    <p>{category.description}</p>
+    <CategoryNav current="akryl" />
+  </section>
+
+  <section class="gallery-section shell">
+    <PaintingGrid paintings={categoryPaintings} eagerCount={3} />
+  </section>
+
+  <figure class="quote shell">
+    <blockquote>“{category.quote}”</blockquote>
+    <figcaption>{category.quoteAuthor}</figcaption>
+  </figure>
+</BaseLayout>

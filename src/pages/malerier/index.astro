@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PaintingGrid from "../../components/PaintingGrid.astro";
+import CategoryNav from "../../components/CategoryNav.astro";
+import { paintings } from "../../data/paintings";
+---
+
+<BaseLayout
+  title="Malerier"
+  description="Se Morten Muusmanns samlede udvalg af malerier i akvarel, olie og akryl."
+  image="/images/previews/paintings/akvarel/summer-bird.webp"
+>
+  <section class="page-intro shell">
+    <p class="eyebrow">Samlingen</p>
+    <h1>Malerier</h1>
+    <p>
+      Et samlet udvalg af værker i akvarel, olie og akryl. Åbn et billede for
+      at se det i fuld størrelse.
+    </p>
+    <CategoryNav current="alle" />
+  </section>
+
+  <section class="gallery-section shell" aria-label="Alle malerier">
+    <div class="gallery-count">
+      <span>{paintings.length} værker</span>
+      <span>Akvarel · Olie · Akryl</span>
+    </div>
+    <PaintingGrid paintings={paintings} eagerCount={3} />
+  </section>
+</BaseLayout>

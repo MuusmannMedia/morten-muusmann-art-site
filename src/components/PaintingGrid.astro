@@ -1,0 +1,19 @@
+---
+import type { Painting } from "../data/paintings";
+import PaintingCard from "./PaintingCard.astro";
+
+interface Props {
+  paintings: Painting[];
+  eagerCount?: number;
+}
+
+const { paintings, eagerCount = 0 } = Astro.props;
+---
+
+<div class="painting-grid">
+  {
+    paintings.map((painting, index) => (
+      <PaintingCard painting={painting} eager={index < eagerCount} />
+    ))
+  }
+</div>
