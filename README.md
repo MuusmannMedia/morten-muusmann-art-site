@@ -7,7 +7,22 @@ En statisk kunst- og portfolio-hjemmeside for kunstmaler og grafisk designer Mor
 - Astro 6
 - TypeScript
 - Statisk HTML og CSS
-- Klargjort til Vercel
+- Deployet til Vercel
+
+## Aktuel status
+
+Status pr. 19. juni 2026:
+
+- Projektet er committed til Git og pushed til
+  [MuusmannMedia/morten-muusmann-art-site](https://github.com/MuusmannMedia/morten-muusmann-art-site).
+- Det aktive Vercel-deployment findes på
+  [morten-muusmann-art-site.vercel.app](https://morten-muusmann-art-site.vercel.app).
+- `mortenmuusmann.dk` er tilføjet i Vercel, men DNS hos one.com afventer
+  ændring og support.
+- Vercel kræver denne A-record:
+  `mortenmuusmann.dk → 216.198.79.1`.
+- MX- og øvrige mailrelaterede DNS-records må ikke ændres.
+- one.coms DNS-panel gav fejlen “ukendt fejl”; support afventes.
 
 ## Indhold
 
@@ -35,10 +50,13 @@ Maleridata vedligeholdes i `src/data/paintings.ts`.
 - Node.js 22.12.0 eller nyere
 - npm
 
-Projektets anbefalede Node-version står i `.nvmrc`. Med nvm kan den aktiveres med:
+Projektets anbefalede Node-version står i `.nvmrc`. Hvis versionen ikke allerede
+er installeret lokalt, bruges:
 
 ```bash
+nvm install 22.12.0
 nvm use
+npm run build
 ```
 
 ## Lokal udvikling
@@ -71,4 +89,9 @@ Det statiske build skrives til `dist/`.
 
 ## Vercel
 
-Projektet er klar til at blive importeret som et Astro-projekt i Vercel. Se [DEPLOYMENT.md](./DEPLOYMENT.md) for GitHub-, Vercel- og DNS-vejledning.
+Projektet er forbundet til GitHub og deployet på Vercel. Push til `main` er den
+normale deploymentvej. Der skal ikke foretages et manuelt deploy som del af
+almindelig udvikling.
+
+Se [DEPLOYMENT.md](./DEPLOYMENT.md) for den aktuelle GitHub-, Vercel- og
+DNS-status.

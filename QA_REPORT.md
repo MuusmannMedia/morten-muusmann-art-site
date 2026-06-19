@@ -6,7 +6,17 @@ Dato: 19. juni 2026
 
 Den første Astro-version består den tekniske og visuelle kvalitetssikring. Produktionsbuildet gennemfører uden fejl, alle 7 indholdssider samt 404-siden genereres, alle kontrollerede interne links og billedstier virker, og de 35 værker vises med korrekt kategorifordeling.
 
-Siden er klar til en første Vercel-deploy. Der er udført to små, sikre rettelser: en manglende sitemap-fil er tilføjet, og en synlig legacy-bemærkning om one.com er fjernet fra kontaktsiden. Ingen filer uden for `morten-muusmann-art-site/` er ændret.
+Siden er efterfølgende committed, pushed til GitHub og deployet på Vercel:
+[morten-muusmann-art-site.vercel.app](https://morten-muusmann-art-site.vercel.app).
+`mortenmuusmann.dk` er tilføjet i Vercel, men DNS hos one.com afventer ændring
+og support. one.coms DNS-panel gav “ukendt fejl”. Vercel kræver A-recorden
+`mortenmuusmann.dk → 216.198.79.1`, mens MX- og øvrige mail-records skal
+bevares.
+
+Under den oprindelige QA blev der udført to små, sikre rettelser: en manglende
+sitemap-fil blev tilføjet, og en synlig legacy-bemærkning om one.com blev
+fjernet fra kontaktsiden. Ingen filer uden for `morten-muusmann-art-site/` blev
+ændret.
 
 ## 1. Build-status
 
@@ -163,11 +173,11 @@ Fundet og rettet:
 - `robots.txt` peger nu korrekt på `https://mortenmuusmann.dk/sitemap.xml`.
 - 404-siden er ikke medtaget i sitemap, hvilket er korrekt.
 
-## 7. Vercel-readiness
+## 7. Vercel-status
 
-Status: **Klar til første deploy**
+Status: **Deployet**
 
-Projektet er egnet til direkte statisk Vercel-deploy:
+Projektet er deployet som et statisk Vercel-site:
 
 - `output: "static"` er sat i `astro.config.mjs`.
 - Der bruges ingen serveradapter eller serverfunktioner.
@@ -179,7 +189,22 @@ Projektet er egnet til direkte statisk Vercel-deploy:
 - Canonical site er sat til `https://mortenmuusmann.dk`.
 - `robots.txt` og `sitemap.xml` kopieres til build-outputtet.
 
-Hvis hele legacy-repositoriet importeres i Vercel, skal `morten-muusmann-art-site` vælges som Root Directory. Der er ikke behov for en `vercel.json` i denne version.
+Aktuelle adresser:
+
+- GitHub:
+  [MuusmannMedia/morten-muusmann-art-site](https://github.com/MuusmannMedia/morten-muusmann-art-site)
+- Vercel:
+  [morten-muusmann-art-site.vercel.app](https://morten-muusmann-art-site.vercel.app)
+
+Projektmappen er roden i sit eget repository. Der er ikke behov for en
+`vercel.json` i denne version. Push til `main` er det normale deploymentflow.
+
+Custom domain afventer one.com:
+
+- `mortenmuusmann.dk` er tilføjet i Vercel.
+- Nødvendig A-record: `mortenmuusmann.dk → 216.198.79.1`
+- one.coms DNS-panel gav “ukendt fejl”, og support afventes.
+- MX- og andre mailrelaterede records må ikke ændres.
 
 ## 8. Fundne problemer
 
@@ -194,7 +219,10 @@ Hvis hele legacy-repositoriet importeres i Vercel, skal `morten-muusmann-art-sit
 2. Tre sandsynlige stavefejl i værktitler er bevaret fra kilden og kræver kunstnerens godkendelse før ændring.
 3. To kendte mulige olie-billedforbytninger kræver redaktionel afklaring.
 4. `BUILD_NOTES.md` registrerer to transitive npm-advisories med lav alvorlighed. Der er ikke kørt en tvungen, potentielt breaking dependency-opdatering.
-5. Der er endnu ikke kørt Lighthouse mod en rigtig Vercel-preview med netværksmåling.
+5. Der er endnu ikke dokumenteret en Lighthouse-måling mod det aktive
+   Vercel-deployment.
+6. Custom domain er ikke aktivt, før one.com-DNS er rettet, og Vercel har
+   udstedt et gyldigt HTTPS-certifikat.
 
 Der blev ikke fundet:
 
@@ -220,10 +248,17 @@ Efter rettelserne er `npm run build` kørt igen med succes, og det endelige outp
 
 ## 10. Anbefalede næste trin
 
-1. Deploy siden til en Vercel Preview med `morten-muusmann-art-site` som Root Directory.
-2. Kør Lighthouse på mobil og desktop mod preview-URL'en.
-3. Bekræft de tre sandsynlige titelstavefejl med Morten.
-4. Bekræft billedmappingen for `ARCTIC WATER` og `ICE TURNING TO WATER`.
-5. Beslut om højopløste originaler fortsat skal være offentligt tilgængelige, eller om der skal bruges mindre downloadversioner.
-6. Gennemgå npm-advisories og opdatér afhængigheder uden `--force`, når en kompatibel opdatering er tilgængelig.
-7. Tilføj eventuelt årstal, pris og salgsstatus senere, når autoritative data findes.
+1. Afvent one.com support, og ændr kun apex-domænets aftalte A-record til
+   `216.198.79.1`.
+2. Bevar MX-, SPF-, DKIM-, DMARC- og øvrige mailrelaterede DNS-records.
+3. Kontrollér domæne, HTTPS, mail, canonical URL, `robots.txt` og `sitemap.xml`,
+   når DNS er aktiv.
+4. Kør Lighthouse på mobil og desktop mod det aktive Vercel-deployment.
+5. Bekræft de tre sandsynlige titelstavefejl med Morten.
+6. Bekræft billedmappingen for `ARCTIC WATER` og `ICE TURNING TO WATER`.
+7. Beslut om højopløste originaler fortsat skal være offentligt tilgængelige,
+   eller om der skal bruges mindre downloadversioner.
+8. Gennemgå npm-advisories og opdatér afhængigheder uden `--force`, når en
+   kompatibel opdatering er tilgængelig.
+9. Tilføj eventuelt årstal, pris og salgsstatus senere, når autoritative data
+   findes.

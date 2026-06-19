@@ -2,6 +2,21 @@
 
 Dato: 19. juni 2026
 
+## Aktuel driftsstatus
+
+Projektet er committed og pushed til
+[MuusmannMedia/morten-muusmann-art-site](https://github.com/MuusmannMedia/morten-muusmann-art-site).
+Vercel-deploymentet er aktivt på
+[morten-muusmann-art-site.vercel.app](https://morten-muusmann-art-site.vercel.app).
+
+`mortenmuusmann.dk` er tilføjet i Vercel, men DNS hos one.com er endnu ikke
+ændret. Vercel kræver A-recorden
+`mortenmuusmann.dk → 216.198.79.1`. one.coms DNS-panel gav “ukendt fejl”, og
+support afventes. MX- og øvrige mailrelaterede DNS-records må ikke ændres.
+
+Efter dokumentationsopdateringen den 19. juni 2026 blev `npm run build` kørt
+med Node.js 24.14.0. Buildet bestod og genererede 8 sider inklusive 404-siden.
+
 ## 1. Hvad der er bygget
 
 Der er bygget en selvstændig, statisk Astro-hjemmeside i:
@@ -199,6 +214,8 @@ Fra projektmappen:
 
 ```bash
 cd morten-muusmann-art-site
+nvm install 22.12.0
+nvm use
 npm install
 npm run dev
 ```
@@ -227,51 +244,39 @@ Det statiske output skrives til:
 dist/
 ```
 
-## 8. Hvordan siden senere kan deployes til Vercel
+## 8. Aktuelt GitHub- og Vercel-flow
 
-Projektet kræver ingen serveradapter og kan deployes som statisk Astro-site.
+Projektet kræver ingen serveradapter og er deployet som et statisk Astro-site.
 
-### Via Vercel Dashboard
+Aktuel opsætning:
 
-1. Push projektet til et Git-repository.
-2. Importér repositoryet i Vercel.
-3. Hvis repositoryets rod også indeholder legacy-materialet, vælg:
+- GitHub:
+  [MuusmannMedia/morten-muusmann-art-site](https://github.com/MuusmannMedia/morten-muusmann-art-site)
+- Produktionsbranch: `main`
+- Vercel:
+  [morten-muusmann-art-site.vercel.app](https://morten-muusmann-art-site.vercel.app)
+- Build command: `npm run build`
+- Output directory: `dist`
+- Node.js: 22.12 eller nyere
 
-   ```text
-   morten-muusmann-art-site
-   ```
+Push til `main` er det normale deploymentflow. Der skal ikke køres `npx vercel`
+som del af almindelig udvikling.
 
-   som **Root Directory**.
-4. Vercel bør registrere Astro automatisk.
-5. Build command:
+Custom-domain-status:
 
-   ```text
-   npm run build
-   ```
+- `mortenmuusmann.dk` er tilføjet i Vercel.
+- Vercel kræver A-recorden `mortenmuusmann.dk → 216.198.79.1`.
+- one.coms DNS-panel gav “ukendt fejl”.
+- DNS-ændringen afventer one.com support.
+- MX-, SPF-, DKIM-, DMARC- og øvrige mail-records skal bevares.
 
-6. Output directory:
-
-   ```text
-   dist
-   ```
-
-7. Vælg Node.js 22 eller nyere i projektindstillingerne.
-
-### Via Vercel CLI
-
-Kør fra `morten-muusmann-art-site/`:
-
-```bash
-npx vercel
-```
-
-Der er ikke foretaget nogen deploy i denne fase.
-
-## 9. GitHub- og Vercel-klargøring
+## 9. Historisk GitHub- og Vercel-klargøring
 
 Dato: 19. juni 2026
 
-Projektet er klargjort som en selvstændig GitHub- og Vercel-klar Astro-mappe.
+Dette afsnit beskriver den oprindelige klargøringsfase, før repository og
+deployment blev oprettet. Projektet blev klargjort som en selvstændig GitHub-
+og Vercel-klar Astro-mappe.
 
 ### Node.js-versionstyring
 
@@ -309,4 +314,6 @@ En eventuel `.env.example` kan fortsat trackes.
 - Buildtid cirka 1,06 sekunder
 - Output i `dist/`
 
-Der er ikke oprettet et GitHub-repository, pushet kode, deployet til Vercel eller ændret DNS som del af denne klargøring.
+På tidspunktet for denne oprindelige klargøring var GitHub-repository, push og
+Vercel-deployment endnu ikke udført. De trin er siden gennemført. DNS er fortsat
+ikke ændret, fordi one.com support afventes.

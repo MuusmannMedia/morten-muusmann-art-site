@@ -1,33 +1,35 @@
 # GitHub- og Vercel-deployment
 
-Denne vejledning beskriver den senere publicering. Den udfører ikke en deploy og ændrer ikke DNS.
+Status pr. 19. juni 2026. Dokumentet beskriver den aktuelle opsætning og udfører
+ikke deploy eller DNS-ændringer.
 
-## 1. Opret et GitHub-repository
+## Aktuel status
 
-1. Log ind på GitHub.
-2. Vælg **New repository**.
-3. Vælg et navn, for eksempel `morten-muusmann-art-site`.
-4. Vælg Public eller Private efter behov.
-5. Opret helst repositoryet uden automatisk README, `.gitignore` eller licens, fordi projektet allerede indeholder de relevante filer.
+- GitHub-repository:
+  [MuusmannMedia/morten-muusmann-art-site](https://github.com/MuusmannMedia/morten-muusmann-art-site)
+- Standardbranch: `main`
+- Vercel-deployment:
+  [morten-muusmann-art-site.vercel.app](https://morten-muusmann-art-site.vercel.app)
+- Custom domain: `mortenmuusmann.dk` er tilføjet i Vercel.
+- DNS-status: Afventer ændring hos one.com og svar fra one.com support.
+- Nødvendig A-record: `mortenmuusmann.dk → 216.198.79.1`
 
-Det anbefales, at `morten-muusmann-art-site/` bliver roden i GitHub-repositoryet. På den måde indeholder repositoryet kun den nye Astro-side og ikke legacy-materialet i den overordnede mappe.
+## GitHub- og deploymentflow
 
-## 2. Push projektet til GitHub
+Projektmappen er roden i sit eget GitHub-repository. Legacy-materiale uden for
+projektmappen indgår ikke i repositoryet og må ikke ændres.
 
-Kør følgende fra `morten-muusmann-art-site/`:
+Det normale flow er:
 
-```bash
-git init
-git add .
-git commit -m "Initial Astro portfolio site"
-git branch -M main
-git remote add origin https://github.com/DIT-BRUGERNAVN/morten-muusmann-art-site.git
-git push -u origin main
-```
+1. Foretag og kontrollér ændringer lokalt.
+2. Kør `npm run build` med Node.js 22.12.0 eller nyere.
+3. Commit ændringerne til Git.
+4. Push til `main` på GitHub.
+5. Vercel bygger og deployer fra GitHub.
 
-Erstat `DIT-BRUGERNAVN` og repository-navnet med de rigtige værdier.
+Der skal normalt ikke køres et manuelt Vercel-deploy.
 
-Kontrollér før første commit, at genererede og lokale filer ikke er staged:
+Kontrollér før commit, at genererede og lokale filer ikke er staged:
 
 ```bash
 git status
@@ -35,37 +37,66 @@ git status
 
 `node_modules/`, `dist/`, `.astro/`, `.vercel/`, miljøfiler og lokale cache-/logfiler er dækket af `.gitignore`.
 
-## 3. Importér projektet i Vercel
+## Vercel-konfiguration
 
-1. Log ind på Vercel.
-2. Vælg **Add New → Project**.
-3. Forbind GitHub, og vælg det nye repository.
-4. Kontrollér disse indstillinger:
+Projektet er allerede importeret i Vercel. Den relevante konfiguration er:
 
-   | Indstilling | Værdi |
-   |---|---|
-   | Framework Preset | Astro |
-   | Build Command | `npm run build` |
-   | Output Directory | `dist` |
-   | Node.js Version | 22.12 eller nyere |
+| Indstilling | Værdi |
+|---|---|
+| Framework Preset | Astro |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+| Node.js Version | 22.12 eller nyere |
+| Produktionsbranch | `main` |
 
-5. Hvis Astro-projektet mod forventning ligger i et større repository, skal `morten-muusmann-art-site` vælges som **Root Directory**.
-6. Start først deployet, når repository, build-indstillinger og eventuelle miljøvariabler er gennemgået.
+Projektet er statisk og kræver ingen Vercel-serveradapter eller `vercel.json`.
 
-Projektet er statisk og kræver ingen Vercel-serveradapter.
+## Lokal buildkontrol
 
-## 4. Domæne og DNS
+Astro 6 kræver Node.js 22.12.0 eller nyere. Hvis den anbefalede version ikke er
+installeret lokalt:
 
-Domænet `mortenmuusmann.dk` kan peges til Vercel senere via projektets domæneindstillinger.
+```bash
+nvm install 22.12.0
+nvm use
+npm run build
+```
 
-DNS må ikke ændres ukritisk. Eksisterende mail kan være afhængig af domænets MX-, SPF-, DKIM- og eventuelle DMARC-records. Kontrollér derfor altid de aktuelle MX-records og øvrige mailrelaterede DNS-records, før nameservere eller DNS-zone ændres.
+## Domæne og DNS
 
-En sikker fremgangsmåde er normalt at:
+`mortenmuusmann.dk` er tilføjet i Vercel, men domænet peger endnu ikke korrekt
+på deploymentet. Vercel kræver:
 
-1. Registrere domænet i Vercel.
-2. Notere de DNS-records, Vercel anbefaler.
-3. Dokumentere den eksisterende DNS-zone.
-4. Bekræfte, at mail-records bevares.
-5. Ændre kun de nødvendige web-records.
+```text
+Type: A
+Host/navn: @ (mortenmuusmann.dk)
+Værdi: 216.198.79.1
+```
 
-Der er ikke foretaget nogen Vercel-deploy eller DNS-ændring som del af denne klargøring.
+one.coms DNS-panel gav “ukendt fejl”, da ændringen blev forsøgt. Der afventes
+derfor hjælp fra one.com support, før DNS ændres.
+
+Vigtige begrænsninger:
+
+- MX-records må ikke ændres.
+- SPF-, DKIM-, DMARC- og andre mailrelaterede records skal bevares.
+- Nameservere må ikke ændres som genvej.
+- Dokumentér den eksisterende DNS-zone før ændringen.
+- Fjern eller erstat kun eventuelle konkurrerende web-records efter konkret
+  afklaring.
+- Kontrollér `www` separat i Vercel, hvis subdomænet også skal bruges.
+
+Når one.com har gennemført eller muliggjort ændringen, skal følgende
+kontrolleres:
+
+1. At `mortenmuusmann.dk` peger på Vercel.
+2. At Vercel viser domænet som korrekt konfigureret.
+3. At HTTPS-certifikatet er udstedt og gyldigt.
+4. At eksisterende e-mail fortsat fungerer.
+5. At canonical URL, `robots.txt` og `sitemap.xml` virker på hoveddomænet.
+
+## Tidligere status
+
+Ved den oprindelige klargøring var GitHub-repositoryet og Vercel-projektet endnu
+ikke oprettet. Den fase er afsluttet: repositoryet er nu pushed, og
+Vercel-deploymentet er aktivt. Kun custom-domain-DNS mangler.
