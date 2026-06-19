@@ -353,28 +353,40 @@ h2 {
 }
 
 .hero__art {
+  --hero-frame-padding: clamp(12px, 1.5vw, 18px);
+
   width: min(100%, 470px);
   margin: 0 auto;
 }
 
 .hero__frame {
   display: block;
-  padding: clamp(14px, 2.5vw, 28px);
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  padding: var(--hero-frame-padding);
   background: #fff;
   box-shadow: 0 30px 70px rgba(29, 29, 26, 0.14);
   transform: rotate(1.2deg);
 }
 
 .hero__frame img {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  height: auto;
   max-height: 66vh;
-  object-fit: contain;
   background: #ece9e1;
 }
 
 .hero__art figcaption {
   display: flex;
-  margin-top: 1.5rem;
+  width: min(
+    100%,
+    calc(
+      46.695vh + var(--hero-frame-padding) + var(--hero-frame-padding)
+    )
+  );
+  margin: 1.5rem auto 0;
   justify-content: space-between;
   gap: 1rem;
   color: var(--muted);

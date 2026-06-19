@@ -17,6 +17,11 @@ support afventes. MX- og øvrige mailrelaterede DNS-records må ikke ændres.
 Efter dokumentationsopdateringen den 19. juni 2026 blev `npm run build` kørt
 med Node.js 24.14.0. Buildet bestod og genererede 8 sider inklusive 404-siden.
 
+Hero-rammen på forsiden blev efterfølgende justeret, så portrættet bevarer sin
+naturlige billedratio, også når viewportens højde begrænser billedet. Den hvide
+passepartout-kant er gjort lidt smallere, mens skygge og rotation er bevaret.
+Billedteksten følger nu den synlige rammebredde på både desktop og mobil.
+
 ## 1. Hvad der er bygget
 
 Der er bygget en selvstændig, statisk Astro-hjemmeside i:
