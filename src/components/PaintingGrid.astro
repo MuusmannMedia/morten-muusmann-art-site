@@ -1,5 +1,6 @@
 ---
 import type { Painting } from "../data/paintings";
+import Lightbox from "./Lightbox.astro";
 import PaintingCard from "./PaintingCard.astro";
 
 interface Props {
@@ -8,12 +9,20 @@ interface Props {
 }
 
 const { paintings, eagerCount = 0 } = Astro.props;
+const lightboxId = `painting-lightbox-${paintings.length}-${paintings[0]?.id ?? "empty"}`;
 ---
 
-<div class="painting-grid">
-  {
-    paintings.map((painting, index) => (
-      <PaintingCard painting={painting} eager={index < eagerCount} />
-    ))
-  }
+<div class="painting-gallery" data-lightbox-gallery>
+  <div class="painting-grid">
+    {
+      paintings.map((painting, index) => (
+        <PaintingCard
+          painting={painting}
+          index={index}
+          eager={index < eagerCount}
+        />
+      ))
+    }
+  </div>
+  <Lightbox id={lightboxId} />
 </div>

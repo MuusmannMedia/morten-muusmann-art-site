@@ -1,0 +1,228 @@
+---
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+const titleId = `${id}-title`;
+---
+
+<dialog
+  class="lightbox"
+  data-lightbox-dialog
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby={titleId}
+>
+  <div class="lightbox__panel" data-lightbox-panel>
+    <button
+      class="lightbox__close"
+      type="button"
+      data-lightbox-close
+      aria-label="Luk billedvisning"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+
+    <div class="lightbox__stage">
+      <button
+        class="lightbox__nav lightbox__nav--previous"
+        type="button"
+        data-lightbox-previous
+        aria-label="Vis forrige maleri"
+      >
+        <span aria-hidden="true">←</span>
+      </button>
+
+      <img class="lightbox__image" data-lightbox-image alt="" />
+
+      <button
+        class="lightbox__nav lightbox__nav--next"
+        type="button"
+        data-lightbox-next
+        aria-label="Vis næste maleri"
+      >
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+
+    <div class="lightbox__details">
+      <div>
+        <h2 class="lightbox__title" id={titleId} data-lightbox-title></h2>
+        <p class="lightbox__meta" data-lightbox-meta></p>
+      </div>
+      <p
+        class="lightbox__position"
+        data-lightbox-position
+        aria-live="polite"
+      >
+      </p>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const initializeLightboxes = () => {
+    document
+      .querySelectorAll<HTMLElement>("[data-lightbox-gallery]")
+      .forEach((gallery) => {
+        if (gallery.dataset.lightboxReady === "true") {
+          return;
+        }
+
+        const dialog =
+          gallery.querySelector<HTMLDialogElement>("[data-lightbox-dialog]");
+        const triggers = Array.from(
+          gallery.querySelectorAll<HTMLAnchorElement>(
+            "[data-lightbox-trigger]",
+          ),
+        );
+        const image =
+          dialog?.querySelector<HTMLImageElement>("[data-lightbox-image]");
+        const title =
+          dialog?.querySelector<HTMLElement>("[data-lightbox-title]");
+        const meta =
+          dialog?.querySelector<HTMLElement>("[data-lightbox-meta]");
+        const position =
+          dialog?.querySelector<HTMLElement>("[data-lightbox-position]");
+        const closeButton = dialog?.querySelector<HTMLButtonElement>(
+          "[data-lightbox-close]",
+        );
+        const previousButton = dialog?.querySelector<HTMLButtonElement>(
+          "[data-lightbox-previous]",
+        );
+        const nextButton = dialog?.querySelector<HTMLButtonElement>(
+          "[data-lightbox-next]",
+        );
+
+        if (
+          !dialog ||
+          !image ||
+          !title ||
+          !meta ||
+          !position ||
+          !closeButton ||
+          !previousButton ||
+          !nextButton ||
+          triggers.length === 0 ||
+          typeof dialog.showModal !== "function"
+        ) {
+          return;
+        }
+
+        gallery.dataset.lightboxReady = "true";
+
+        let currentIndex = 0;
+        let activeTrigger: HTMLAnchorElement | null = null;
+
+        const renderPainting = () => {
+          const trigger = triggers[currentIndex];
+          const paintingTitle = trigger.dataset.title ?? "";
+          const technique = trigger.dataset.technique ?? "";
+          const size = trigger.dataset.size ?? "";
+          const width = Number(trigger.dataset.width);
+          const height = Number(trigger.dataset.height);
+
+          image.src = trigger.href;
+          image.alt = paintingTitle;
+
+          if (width > 0 && height > 0) {
+            image.width = width;
+            image.height = height;
+          }
+
+          title.textContent = paintingTitle;
+          meta.textContent = [technique, size].filter(Boolean).join(" · ");
+          position.textContent = `${currentIndex + 1} / ${triggers.length}`;
+        };
+
+        const showPainting = (index: number) => {
+          currentIndex =
+            (index + triggers.length) % triggers.length;
+          renderPainting();
+        };
+
+        const closeLightbox = () => {
+          if (dialog.open) {
+            dialog.close();
+          }
+        };
+
+        const openLightbox = (
+          index: number,
+          trigger: HTMLAnchorElement,
+        ) => {
+          activeTrigger = trigger;
+          showPainting(index);
+          document.documentElement.classList.add("lightbox-open");
+          dialog.showModal();
+          closeButton.focus();
+        };
+
+        const hasMultiplePaintings = triggers.length > 1;
+        previousButton.hidden = !hasMultiplePaintings;
+        nextButton.hidden = !hasMultiplePaintings;
+
+        triggers.forEach((trigger, index) => {
+          trigger.addEventListener("click", (event) => {
+            if (
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            ) {
+              return;
+            }
+
+            event.preventDefault();
+            openLightbox(index, trigger);
+          });
+        });
+
+        closeButton.addEventListener("click", closeLightbox);
+        previousButton.addEventListener("click", () => {
+          showPainting(currentIndex - 1);
+        });
+        nextButton.addEventListener("click", () => {
+          showPainting(currentIndex + 1);
+        });
+
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) {
+            closeLightbox();
+          }
+        });
+
+        dialog.addEventListener("cancel", (event) => {
+          event.preventDefault();
+          closeLightbox();
+        });
+
+        dialog.addEventListener("close", () => {
+          document.documentElement.classList.remove("lightbox-open");
+          activeTrigger?.focus();
+          activeTrigger = null;
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (!dialog.open) {
+            return;
+          }
+
+          if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            showPainting(currentIndex - 1);
+          }
+
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+            showPainting(currentIndex + 1);
+          }
+        });
+      });
+  };
+
+  initializeLightboxes();
+  document.addEventListener("astro:page-load", initializeLightboxes);
+</script>

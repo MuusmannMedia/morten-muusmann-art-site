@@ -22,6 +22,15 @@ naturlige billedratio, også når viewportens højde begrænser billedet. Den hv
 passepartout-kant er gjort lidt smallere, mens skygge og rotation er bevaret.
 Billedteksten følger nu den synlige rammebredde på både desktop og mobil.
 
+Den 22. juni 2026 fik malerigallerierne en genbrugelig, framework-fri lightbox.
+Klik på et værk åbner originalbilledet i en responsiv modal med titel, teknik og
+størrelse. Modallen kan lukkes med knap, Escape eller klik på overlayet, og der
+kan bladres med pileknapper eller tastaturets venstre/højre piletaster. Hvert
+galleri bruger sin egen eksisterende liste fra `paintings.ts`, så
+kategorisiderne kun bladrer mellem værker i den valgte kategori. Desktop- og
+mobilvisning, fokusretur, scroll-lock og listelængderne 35/21/11/3 er
+browserkontrolleret.
+
 ## 1. Hvad der er bygget
 
 Der er bygget en selvstændig, statisk Astro-hjemmeside i:

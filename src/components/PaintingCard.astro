@@ -3,10 +3,11 @@ import { previewImageFor, type Painting } from "../data/paintings";
 
 interface Props {
   painting: Painting;
+  index: number;
   eager?: boolean;
 }
 
-const { painting, eager = false } = Astro.props;
+const { painting, index, eager = false } = Astro.props;
 const previewImage = previewImageFor(painting.image);
 ---
 
@@ -14,9 +15,15 @@ const previewImage = previewImageFor(painting.image);
   <a
     class="painting-card__image"
     href={painting.image}
-    target="_blank"
-    rel="noreferrer"
-    aria-label={`Åbn ${painting.title} i fuld størrelse`}
+    data-lightbox-trigger
+    data-lightbox-index={index}
+    data-title={painting.title}
+    data-technique={painting.technique}
+    data-size={painting.size ?? ""}
+    data-width={painting.width}
+    data-height={painting.height}
+    aria-haspopup="dialog"
+    aria-label={`Vis ${painting.title} i billedvisning`}
   >
     <img
       src={previewImage}
